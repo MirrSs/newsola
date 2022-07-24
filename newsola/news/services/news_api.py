@@ -17,7 +17,7 @@ class Record:
         return  self.title + self.description
 
 
-def get_headlines(request) -> list:
+def get_headlines(request,cat:str = 'general') -> list:
     api = NewsApiClient(api_key='4db418996f7844b2a86bbf6df8c0ba79')
     user = CustomUser.objects.get(username = request.user.get_username())
     user_lang = user.language
@@ -27,7 +27,10 @@ def get_headlines(request) -> list:
     else:
         user_lang = 'en'
     logger.debug(user_lang)
-    news = api.get_top_headlines(language=str(user_lang),sources='bbc-news,associated-press,bbc-sport,cnn,google-news-ru,hacker-news,ign,lenta,polygon,reuters,techcrunch,')
+    if cat=='general':
+        news = api.get_top_headlines(language=str(user_lang),sources='bbc-news,associated-press,bbc-sport,cnn,google-news-ru,hacker-news,ign,lenta,polygon,reuters,techcrunch,')
+    else:
+        news = api.get_top_headlines(language=str(user_lang),category=cat)
     # top_headlines = newsapi.get_top_headlines(q='bitcoin',
     #                                       sources='bbc-news,the-verge',
     #                                       category='business',

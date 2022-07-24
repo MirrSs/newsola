@@ -1,5 +1,16 @@
 {% extends 'news/nav.html' %}
 {% block content %}
+<nav style="float:center" class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
+  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+    <li class="nav-item"><a href="{% url 'index' "bussines" %}">Business</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "entertainment" %}">Entertainment</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "general" %}">General</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "health" %}">Health</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "science" %}">Science</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "sports" %}">Sports</a></li> |
+    <li class="nav-item"><a href="{% url 'index' "technology" %}">Technology</a></li>
+  </ul>
+</nav>
 <div class="album py-5 bg-light">
   <div class="container">
 

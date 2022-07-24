@@ -14,7 +14,12 @@ logger.add("debuglog.json", format="{time} {level} {message}", level="WARNING",
  rotation="50 KB",compression="zip",serialize=True)
 
 @login_required
-def index(request):
+def index(request,category="general"):
+    news_list = get_headlines(request,category)
+    context = {'news_list':news_list,'category':category}
+    return render(request, 'news/index.html', context)
+
+def general_view(request):
     news_list = get_headlines(request)
     context = {'news_list':news_list}
     return render(request, 'news/index.html', context)

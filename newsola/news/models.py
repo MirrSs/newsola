@@ -1,5 +1,7 @@
+from sre_parse import CATEGORIES
 from django.db import models
 from django.utils import timezone
+from enum import Enum
 import datetime
 
 from django.contrib.auth.models import AbstractUser
@@ -12,7 +14,6 @@ LANGUAGE_CHOICE = (
     ("fr", "Français"),
     ("it", "Italiano"),
 )
-
 
 # Create your models here.
 
