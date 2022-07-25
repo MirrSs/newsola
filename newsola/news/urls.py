@@ -9,6 +9,6 @@ urlpatterns = [
     path('user/sign',views.sign_view,name='signin'),
     path('user/signout',views.signout_view,name='signout'),
     path('user/register',views.register_view,name='register'),
-    path('seealso',views.seealso_view,name='seealso'),
-    path('info',views.info_view,name='info')
+    path('info/seealso',views.seealso_view,name='seealso'),
+    path('info/about',views.info_view,name='info')
 ]

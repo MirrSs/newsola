@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from unicodedata import category
 from newsapi import NewsApiClient
 from loguru import logger
+import requests
 
 from news.models import LANGUAGE_CHOICE, CustomUser
 
@@ -30,15 +32,14 @@ def get_headlines(request,cat:str = 'general') -> list:
             user_lang = 'en'
         logger.debug(user_lang)
     
-    if cat=='general':
-        news = api.get_top_headlines(language=str(user_lang),sources='bbc-news,associated-press,bbc-sport,cnn,google-news-ru,hacker-news,ign,lenta,polygon,reuters,techcrunch,')
-    else:
-        news = api.get_top_headlines(language=str(user_lang),category=cat)
-    # top_headlines = newsapi.get_top_headlines(q='bitcoin',
-    #                                       sources='bbc-news,the-verge',
-    #                                       category='business',
-    #                                       language='en',
-    #                                       country='us')
+    with requests.Session() as session:
+        if cat=='general':
+            # news_headlines = api.get_top_headlines(language=str(user_lang),sources='bbc-news,associated-press,bbc-sport,cnn,google-news-ru,hacker-news,ign,lenta,polygon,reuters,techcrunch,')
+            news = api.get_everything(language=str(user_lang),page_size=30,domains='techcrunch.com,dtf.ru,pikabu.ru,bbc.com,medium.com,ign.com,thehackernews.com,lenta.ru,polygon.com,reuters.com,techcrunch.com,ria.ru,ru.euronews.com,sputnik.by,belta.by')
+        else:
+            news = api.get_top_headlines(language=str(user_lang),category=cat,page_size=20)
+            #news_everything = api.get_everything(language=str(user_lang),category=cat,domains='techcrunch.com,dtf.ru,pikabu.ru,bbc.com,medium.com')
+            
 
     if(news.get('status')=='ok'):
         logger.debug("NewsAPI request status:OK")
@@ -54,6 +55,8 @@ def get_headlines(request,cat:str = 'general') -> list:
             if urlToImage == None:
                 continue
             record = Record(title,desc,url,urlToImage,pub_date)
+            if len(articles_list) >= 35:
+                break
             articles_list.append(record)
     logger.debug("Articles are added in list")
     return articles_list
