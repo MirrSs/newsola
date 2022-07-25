@@ -1,9 +1,7 @@
 from dataclasses import dataclass
-from unicodedata import category
 from newsapi import NewsApiClient
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from loguru import logger
+import datetime
 import requests
 
 from news.models import LANGUAGE_CHOICE, CustomUser
@@ -77,8 +75,12 @@ def search_news(request,str_to_search:str) -> list:
             user_lang = 'en'
         logger.debug(user_lang)
     
+        current_date = datetime.datetime.now()
+        date_delta = datetime.timedelta(days = 7)
+        seven_days_ago_date = current_date - date_delta
+
     with requests.Session() as session:
-        news = api.get_top_headlines(language=str(user_lang),page_size=10,q=str_to_search)
+        news = api.get_everything(page_size=10,q=str_to_search,from_param=seven_days_ago_date.strftime('%Y-%m-%d'),to=current_date.strftime('%Y-%m-%d'))
             
     if(news.get('status')=='ok'):
         logger.debug("NewsAPI request status:OK")
