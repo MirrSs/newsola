@@ -1,5 +1,7 @@
 from django.urls import path
 
+from news.services.news_api import search_news
+
 from . import views
 
 urlpatterns = [
@@ -10,5 +12,6 @@ urlpatterns = [
     path('user/signout',views.signout_view,name='signout'),
     path('user/register',views.register_view,name='register'),
     path('info/seealso',views.seealso_view,name='seealso'),
-    path('info/about',views.info_view,name='info')
+    path('info/about',views.info_view,name='info'),
+    path('user/search',views.search_view,name='search')
 ]

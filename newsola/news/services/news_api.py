@@ -1,11 +1,15 @@
 from dataclasses import dataclass
 from unicodedata import category
 from newsapi import NewsApiClient
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from loguru import logger
 import requests
 
 from news.models import LANGUAGE_CHOICE, CustomUser
 
+LANGS = ('ru','en','es','de','fr','it')
+api = NewsApiClient(api_key='4db418996f7844b2a86bbf6df8c0ba79')
 
 @dataclass
 class Record:
@@ -20,13 +24,12 @@ class Record:
 
 
 def get_headlines(request,cat:str = 'general') -> list:
-    api = NewsApiClient(api_key='4db418996f7844b2a86bbf6df8c0ba79')
     user_lang = 'en'
     if request.user.is_authenticated:
         user = CustomUser.objects.get(username = request.user.get_username())
         user_lang = user.language
 
-        if user_lang =='ru' or user_lang == 'en' or user_lang == 'de' or user_lang =='es' or user_lang == 'fr' or user_lang == 'it':
+        if user_lang in LANGS:
             pass
         else:
             user_lang = 'en'
@@ -60,6 +63,43 @@ def get_headlines(request,cat:str = 'general') -> list:
             articles_list.append(record)
     logger.debug("Articles are added in list")
     return articles_list
+
+#Search
+def search_news(request,str_to_search:str) -> list:
+    user_lang = 'en'
+    if request.user.is_authenticated:
+        user = CustomUser.objects.get(username = request.user.get_username())
+        user_lang = user.language
+
+        if user_lang in LANGS:
+            pass
+        else:
+            user_lang = 'en'
+        logger.debug(user_lang)
+    
+    with requests.Session() as session:
+        news = api.get_top_headlines(language=str(user_lang),page_size=10,q=str_to_search)
+            
+    if(news.get('status')=='ok'):
+        logger.debug("NewsAPI request status:OK")
+        articles = news.get('articles')
+        articles_list = []
+        
+        for article in articles:
+            title = article.get('title')
+            desc = article.get('description')
+            url = article.get('url')
+            urlToImage = article.get('urlToImage')
+            pub_date = article.get('publishedAt')
+            if urlToImage == None:
+                continue
+            record = Record(title,desc,url,urlToImage,pub_date)
+            if len(articles_list) >= 35:
+                break
+            articles_list.append(record)
+    logger.debug("Articles are added in list")
+    return articles_list
+    
 
 
 

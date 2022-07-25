@@ -1,0 +1,13 @@
+{% extends 'news/nav.html' %}
+{% block content %}
+<body class="text-center">
+<div class="content_div">
+    <form action="{% url 'search'%}" method="post" style=" width: 20vw; margin-left : 40vw; margin-top: 10vw;">
+        <h1>Search</h1>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="w-100 btn btn-lg btn-primary" type="submit" name="submit">Confirm</button>
+        </form>
+</div>
+</body>
+{% endblock content %}
