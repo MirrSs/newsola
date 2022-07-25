@@ -19,14 +19,17 @@ class Record:
 
 def get_headlines(request,cat:str = 'general') -> list:
     api = NewsApiClient(api_key='4db418996f7844b2a86bbf6df8c0ba79')
-    user = CustomUser.objects.get(username = request.user.get_username())
-    user_lang = user.language
+    user_lang = 'en'
+    if request.user.is_authenticated:
+        user = CustomUser.objects.get(username = request.user.get_username())
+        user_lang = user.language
 
-    if user_lang =='ru' or user_lang == 'en' or user_lang == 'de' or user_lang =='es' or user_lang == 'fr' or user_lang == 'it':
-        pass
-    else:
-        user_lang = 'en'
-    logger.debug(user_lang)
+        if user_lang =='ru' or user_lang == 'en' or user_lang == 'de' or user_lang =='es' or user_lang == 'fr' or user_lang == 'it':
+            pass
+        else:
+            user_lang = 'en'
+        logger.debug(user_lang)
+    
     if cat=='general':
         news = api.get_top_headlines(language=str(user_lang),sources='bbc-news,associated-press,bbc-sport,cnn,google-news-ru,hacker-news,ign,lenta,polygon,reuters,techcrunch,')
     else:

@@ -13,7 +13,6 @@ from django.http import HttpResponse
 logger.add("debuglog.json", format="{time} {level} {message}", level="WARNING",
  rotation="50 KB",compression="zip",serialize=True)
 
-@login_required
 def index(request,category="general"):
     news_list = get_headlines(request,category)
     context = {'news_list':news_list,'category':category}
@@ -27,7 +26,6 @@ def general_view(request):
 def sign_view(request):
     return user_sign(request)
 
-@login_required
 def signout_view(request):
     return user_signout(request)
 

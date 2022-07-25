@@ -19,7 +19,7 @@ def user_register(request):
             login(request, user)
             messages.success(request,"Success!")
             logger.warning("NEW USER REGISTERED!")
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('general'))
         else:
             messages.error(request,"Error while registering")
     form = UserRegisterForm()
@@ -31,10 +31,10 @@ def user_sign(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('general'))
     form = UserLoginForm()
     return render(request,"news/sign.html",{"form":form})
 
 def user_signout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('general'))
