@@ -1,4 +1,3 @@
-from re import A
 from django import forms
 from news.models import CustomUser,LANGUAGE_CHOICE, Search
 
